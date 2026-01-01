@@ -2,45 +2,131 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>SİSTEME GİRİŞ</title>
+    <title>SISTEM_GERI_YUKLEME_V1.04</title>
     <style>
-        body { background-color: black; color: #00ff00; font-family: 'Courier New', Courier, monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-        .box { border: 1px solid #00ff00; padding: 20px; background: #050505; box-shadow: 0 0 15px #00ff00; }
-        input { background: black; border: 1px solid #00ff00; color: #00ff00; margin: 10px 0; padding: 5px; width: 200px; outline: none; }
-        button { background: #00ff00; color: black; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
-        button:hover { background: #008800; }
-        #secret-content { display: none; text-align: center; margin-top: 20px; }
+        body { 
+            background-color: #1a1a1a; 
+            color: #d1d1d1; 
+            font-family: "Courier New", Courier, monospace; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* CRT Ekran Efekti */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .window {
+            width: 400px;
+            background-color: #c0c0c0;
+            border: 2px solid #ffffff;
+            border-right-color: #808080;
+            border-bottom-color: #808080;
+            padding: 2px;
+            box-shadow: 5px 5px 0px #000;
+            z-index: 3;
+        }
+
+        .title-bar {
+            background-color: #000080;
+            color: white;
+            padding: 3px 5px;
+            font-weight: bold;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .content {
+            padding: 20px;
+            color: #000;
+        }
+
+        input {
+            width: 100%;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            border: 2px inset #fff;
+            padding: 5px;
+            font-family: "Courier New", monospace;
+            background: #fff;
+        }
+
+        button {
+            padding: 5px 15px;
+            background: #c0c0c0;
+            border: 2px outset #fff;
+            cursor: pointer;
+            font-family: "Courier New", monospace;
+        }
+
+        button:active {
+            border: 2px inset #fff;
+        }
+
+        #secret-content {
+            display: none;
+            text-align: center;
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            border: 2px solid #0f0;
+        }
     </style>
 </head>
 <body>
-    <div class="box" id="login-box">
-        <h2>ERİŞİM PANELİ V.2.1</h2>
-        <p>Kullanıcı Adı:</p>
-        <input type="text" id="username">
-        <p>Şifre:</p>
-        <input type="password" id="password">
-        <br><br>
-        <button onclick="checkLogin()">SİSTEME SIZ</button>
-        <p id="error" style="color: red;"></p>
+
+    <div class="window" id="login-window">
+        <div class="title-bar">
+            <span>SISTEM GIRISI - 1997</span>
+            <span>[X]</span>
+        </div>
+        <div class="content">
+            <p style="font-size: 13px; margin: 0;">Erişim için kimlik doğrulama gerekiyor...</p>
+            <br>
+            <label>Kullanıcı:</label>
+            <input type="text" id="username" placeholder="">
+            <br>
+            <label>Erişim Anahtarı:</label>
+            <input type="password" id="password" placeholder="">
+            <br><br>
+            <button onclick="checkLogin()">GIRIŞ YAP</button>
+            <p id="error" style="color: red; font-size: 11px; margin-top: 10px;"></p>
+        </div>
     </div>
 
     <div id="secret-content">
-        <h1>ERİŞİM ONAYLANDI</h1>
-        <p>Son komut dosyası yüklendi...</p>
-        <a href="https://www.youtube.com/watch?v=BURAYA_VİDEO_KODU" target="_blank" style="color: yellow; font-size: 20px;">GİZLİ KAYDI OYNAT</a>
+        <h2 style="color: #0f0;">ERİŞİM ONAYLANDI</h2>
+        <p>Dosya bulunuyor...</p>
+        <p>Konum: TERAS_ARSIVI_04</p>
+        <hr color="#0f0">
+        <a href="https://www.youtube.com/watch?v=VIDEO_KODU" target="_blank" style="color: yellow; text-decoration: none;">> DOSYAYI OYNAT</a>
     </div>
 
     <script>
         function checkLogin() {
-            var user = document.getElementById("username").value;
-            var pass = document.getElementById("password").value;
+            var user = document.getElementById("username").value.toUpperCase();
+            var pass = document.getElementById("password").value.toUpperCase();
             
-            // BURADAKİ "admin" VE "sifre123" KISIMLARINI KENDİ BELİRLEDİĞİN ŞEYLERLE DEĞİŞTİR
+            // Kullanıcı adı ve şifreyi buradan ayarla
             if (user === "MISAFIR" && pass === "SLENDER6") {
-                document.getElementById("login-box").style.display = "none";
+                document.getElementById("login-window").style.display = "none";
                 document.getElementById("secret-content").style.display = "block";
             } else {
-                document.getElementById("error").innerHTML = "HATALI KİMLİK BİLGİSİ!";
+                document.getElementById("error").innerHTML = "HATA: Gecersiz kimlik. Sistem gunluge kaydedildi.";
             }
         }
     </script>
