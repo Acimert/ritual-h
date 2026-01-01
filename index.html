@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>SİSTEME GİRİŞ</title>
+    <style>
+        body { background-color: black; color: #00ff00; font-family: 'Courier New', Courier, monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { border: 1px solid #00ff00; padding: 20px; background: #050505; box-shadow: 0 0 15px #00ff00; }
+        input { background: black; border: 1px solid #00ff00; color: #00ff00; margin: 10px 0; padding: 5px; width: 200px; outline: none; }
+        button { background: #00ff00; color: black; border: none; padding: 10px 20px; cursor: pointer; font-weight: bold; }
+        button:hover { background: #008800; }
+        #secret-content { display: none; text-align: center; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="box" id="login-box">
+        <h2>ERİŞİM PANELİ V.2.1</h2>
+        <p>Kullanıcı Adı:</p>
+        <input type="text" id="username">
+        <p>Şifre:</p>
+        <input type="password" id="password">
+        <br><br>
+        <button onclick="checkLogin()">SİSTEME SIZ</button>
+        <p id="error" style="color: red;"></p>
+    </div>
+
+    <div id="secret-content">
+        <h1>ERİŞİM ONAYLANDI</h1>
+        <p>Son komut dosyası yüklendi...</p>
+        <a href="https://www.youtube.com/watch?v=BURAYA_VİDEO_KODU" target="_blank" style="color: yellow; font-size: 20px;">GİZLİ KAYDI OYNAT</a>
+    </div>
+
+    <script>
+        function checkLogin() {
+            var user = document.getElementById("username").value;
+            var pass = document.getElementById("password").value;
+            
+            // BURADAKİ "admin" VE "sifre123" KISIMLARINI KENDİ BELİRLEDİĞİN ŞEYLERLE DEĞİŞTİR
+            if (user === "MISAFIR" && pass === "SLENDER6") {
+                document.getElementById("login-box").style.display = "none";
+                document.getElementById("secret-content").style.display = "block";
+            } else {
+                document.getElementById("error").innerHTML = "HATALI KİMLİK BİLGİSİ!";
+            }
+        }
+    </script>
+</body>
+</html>
