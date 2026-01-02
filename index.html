@@ -14,6 +14,7 @@
             height: 100vh; 
             margin: 0;
             overflow: hidden;
+            position: relative; /* İpucu yazısı için gerekli */
         }
 
         /* CRT Ekran Efekti */
@@ -84,6 +85,19 @@
             color: #0f0;
             padding: 20px;
             border: 2px solid #0f0;
+            z-index: 4;
+        }
+
+        /* SOL ALT KÖŞEDEKİ GİZLİ İPUCU */
+        #hint-text {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            color: #333333; /* Çok koyu gri, neredeyse siyah */
+            font-size: 10px;
+            opacity: 0.6; /* Biraz daha şeffaflık */
+            z-index: 1;
+            user-select: none; /* Seçilemesin ki hemen fark etmesinler */
         }
     </style>
 </head>
@@ -116,15 +130,23 @@
         <a href="https://www.youtube.com/watch?v=VIDEO_KODU" target="_blank" style="color: yellow; text-decoration: none;">> DOSYAYI OYNAT</a>
     </div>
 
+    <div id="hint-text">
+        > Sistem kayıtları ARSIV.txt içerisinde saklanmaktadır.
+    </div>
+
     <script>
         function checkLogin() {
+            // Büyük harfe çeviriyoruz ki nasıl yazarlarsa yazsınlar kabul etsin
             var user = document.getElementById("username").value.toUpperCase();
             var pass = document.getElementById("password").value.toUpperCase();
             
-            // Kullanıcı adı ve şifreyi buradan ayarla
-            if (user === "MISAFIR" && pass === "SLENDER6") {
+            // BELİRLEDİĞİN KULLANICI ADI VE ŞİFRE BURAYA GİRİLECEK
+            // NOT: Şifrendeki Türkçe karakterler (İ, Ş gibi) sorun çıkarabilir,
+            // İngilizce karakter kullanmanı öneririm. Örn: LITTLEHEROBRINEIMCUMMINGINYOURMOM
+            if (user === "XMUST4F4_3RS0ZQ" && pass === "LITTLEHEROBRINEIMCUMMINGINYOURMOM") {
                 document.getElementById("login-window").style.display = "none";
                 document.getElementById("secret-content").style.display = "block";
+                document.getElementById("hint-text").style.display = "none"; // Giriş yapınca ipucu kaybolsun
             } else {
                 document.getElementById("error").innerHTML = "HATA: Gecersiz kimlik. Sistem gunluge kaydedildi.";
             }
