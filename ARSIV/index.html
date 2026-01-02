@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>SISTEM_ARSIVI_ERISIM</title>
+    <style>
+        body { 
+            background-color: #050505; 
+            color: #808080; 
+            font-family: "Courier New", Courier, monospace; 
+            padding: 50px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        /* Hafif titreme efekti */
+        .glitch {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        .header { color: #555; border-bottom: 1px solid #333; margin-bottom: 20px; }
+        .entry { margin: 5px 0; letter-spacing: 2px; }
+        .highlight { color: #a0a0a0; } /* Gizli parçanın biraz daha belirgin olması için */
+        
+        /* CRT Çizgileri */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+            z-index: 10;
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <p>> SISTEM_GERI_YUKLEME_LOGLARI [VERI_KURTARMA_MODU]</p>
+        <p>> 6 KAYIT BULUNDU...</p>
+    </div>
+
+    <div class="glitch">
+        <div class="entry">USR_REC_01: *************_G3R</div>
+        <div class="entry">USR_REC_02: *************_S0N4</div>
+        <div class="entry">USR_REC_03: ***********_M4N</div>
+        <div class="entry">USR_REC_04: **********_4ND3RS0N</div>
+        <div class="entry highlight">USR_REC_05: **********_3RS0ZQ</div>
+        <div class="entry">USR_REC_06: **********GARTI</div>
+    </div>
+
+    <div style="margin-top: 50px; color: #333; font-size: 10px;">
+        [UYARI: VERI PARÇALANMASI TESPİT EDİLDİ. EKSİK KARAKTERLERİ MANUEL OLARAK TAMAMLAYIN.]
+    </div>
+</body>
+</html>
