@@ -4,151 +4,60 @@
     <meta charset="UTF-8">
     <title>SISTEM_GERI_YUKLEME_V1.04</title>
     <style>
-        body { 
-            background-color: #1a1a1a; 
-            color: #d1d1d1; 
-            font-family: "Courier New", Courier, monospace; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0;
-            overflow: hidden;
-            position: relative; /* İpucu yazısı için gerekli */
-        }
-
-        /* CRT Ekran Efekti */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-        }
-
-        .window {
-            width: 400px;
-            background-color: #c0c0c0;
-            border: 2px solid #ffffff;
-            border-right-color: #808080;
-            border-bottom-color: #808080;
-            padding: 2px;
-            box-shadow: 5px 5px 0px #000;
-            z-index: 3;
-        }
-
-        .title-bar {
-            background-color: #000080;
-            color: white;
-            padding: 3px 5px;
-            font-weight: bold;
-            font-size: 12px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .content {
-            padding: 20px;
-            color: #000;
-        }
-
-        input {
-            width: 100%;
-            margin-top: 10px;
-            margin-bottom: 10px;
-            border: 2px inset #fff;
-            padding: 5px;
-            font-family: "Courier New", monospace;
-            background: #fff;
-        }
-
-        button {
-            padding: 5px 15px;
-            background: #c0c0c0;
-            border: 2px outset #fff;
-            cursor: pointer;
-            font-family: "Courier New", monospace;
-        }
-
-        button:active {
-            border: 2px inset #fff;
-        }
-
-        #secret-content {
-            display: none;
-            text-align: center;
-            background: #000;
-            color: #0f0;
-            padding: 20px;
-            border: 2px solid #0f0;
-            z-index: 4;
-        }
-
-        /* SOL ALT KÖŞEDEKİ GİZLİ İPUCU */
-        #hint-text {
-            position: absolute;
-            bottom: 15px;
-            left: 15px;
-            color: #333333; /* Çok koyu gri, neredeyse siyah */
-            font-size: 10px;
-            opacity: 0.6; /* Biraz daha şeffaflık */
-            z-index: 1;
-            user-select: none; /* Seçilemesin ki hemen fark etmesinler */
-        }
+        body { background-color: #1a1a1a; color: #d1d1d1; font-family: "Courier New", monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; position: relative; }
+        body::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); z-index: 2; background-size: 100% 4px; pointer-events: none; }
+        .window { width: 400px; background-color: #c0c0c0; border: 2px solid #ffffff; border-right-color: #808080; border-bottom-color: #808080; padding: 2px; box-shadow: 5px 5px 0px #000; z-index: 3; }
+        .title-bar { background-color: #000080; color: white; padding: 3px 5px; font-weight: bold; font-size: 12px; display: flex; justify-content: space-between; }
+        .content { padding: 20px; color: #000; }
+        input { width: 100%; margin: 10px 0; border: 2px inset #fff; padding: 5px; background: #fff; }
+        button { padding: 5px 15px; background: #c0c0c0; border: 2px outset #fff; cursor: pointer; }
+        #secret-content { display: none; text-align: center; background: #000; color: #0f0; padding: 20px; border: 2px solid #0f0; z-index: 4; }
+        #hint-text { position: absolute; bottom: 15px; left: 15px; color: #222; font-size: 10px; opacity: 0.5; z-index: 1; user-select: none; }
     </style>
 </head>
-<body>
-
-    <div class="window" id="login-window">
-        <div class="title-bar">
-            <span>SISTEM GIRISI - 1997</span>
-            <span>[X]</span>
-        </div>
+<body oncontextmenu="return false;"> <div class="window" id="login-window">
+        <div class="title-bar"><span>SISTEM GIRISI - 1997</span><span>[X]</span></div>
         <div class="content">
-            <p style="font-size: 13px; margin: 0;">Erişim için kimlik doğrulama gerekiyor...</p>
-            <br>
-            <label>Kullanıcı:</label>
-            <input type="text" id="username" placeholder="">
-            <br>
-            <label>Erişim Anahtarı:</label>
-            <input type="password" id="password" placeholder="">
+            <p style="font-size: 12px;">Erişim için kimlik doğrulama gerekiyor...</p>
+            <label>Kullanıcı:</label><input type="text" id="username">
+            <label>Erişim Anahtarı:</label><input type="password" id="password">
             <br><br>
-            <button onclick="checkLogin()">GIRIŞ YAP</button>
+            <button onclick="check()">GIRIŞ YAP</button>
             <p id="error" style="color: red; font-size: 11px; margin-top: 10px;"></p>
         </div>
     </div>
 
     <div id="secret-content">
         <h2 style="color: #0f0;">ERİŞİM ONAYLANDI</h2>
-        <p>Dosya bulunuyor...</p>
         <p>Konum: TERAS_ARSIVI_04</p>
         <hr color="#0f0">
-        <a href="https://www.youtube.com/watch?v=VIDEO_KODU" target="_blank" style="color: yellow; text-decoration: none;">> DOSYAYI OYNAT</a>
+        <a id="final-link" href="#" style="color: yellow; text-decoration: none;">> DOSYAYI OYNAT</a>
     </div>
 
-    <div id="hint-text">
-        > Sistem kayıtları sitede /ARSIV içerisinde saklanmaktadır.
-    </div>
+    <div id="hint-text">> Sistem kayıtları sitede /ARSIV içerisinde saklanmaktadır.</div>
 
     <script>
-        function checkLogin() {
-            // Büyük harfe çeviriyoruz ki nasıl yazarlarsa yazsınlar kabul etsin
-            var user = document.getElementById("username").value.toUpperCase();
-            var pass = document.getElementById("password").value.toUpperCase();
+        const u = "WE1VU1Q0RjRfM1JTMFpR";
+        const p = "TElUVExFSEVST0JSSU5FSU1DVU1NSU5HSU5ZT1VSTU9N";
+        const l = "aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1RVVJSWV9WSURFT19JRA=="; // Youtube linkin
+
+        function check() {
+            const user = btoa(document.getElementById("username").value.toUpperCase());
+            const pass = btoa(document.getElementById("password").value.toUpperCase());
             
-            // BELİRLEDİĞİN KULLANICI ADI VE ŞİFRE BURAYA GİRİLECEK
-            // NOT: Şifrendeki Türkçe karakterler (İ, Ş gibi) sorun çıkarabilir,
-            // İngilizce karakter kullanmanı öneririm. Örn: LITTLEHEROBRINEIMCUMMINGINYOURMOM
-            if (user === "XMUST4F4_3RS0ZQ" && pass === "LITTLEHEROBRINEIMCUMMINGINYOURMOM") {
+            if (user === u && pass === p) {
                 document.getElementById("login-window").style.display = "none";
                 document.getElementById("secret-content").style.display = "block";
-                document.getElementById("hint-text").style.display = "none"; // Giriş yapınca ipucu kaybolsun
+                document.getElementById("final-link").href = atob(l);
             } else {
-                document.getElementById("error").innerHTML = "HATA: Gecersiz kimlik. Sistem gunluge kaydedildi.";
+                document.getElementById("error").innerHTML = "HATA: Gecersiz kimlik.";
+            }
+        }
+
+        // F12 ve Ctrl+U Engelleme Girişimi
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+                return false;
             }
         }
     </script>
