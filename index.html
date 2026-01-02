@@ -4,116 +4,32 @@
     <meta charset="UTF-8">
     <title>veteranscove-database_V1.31</title>
     <style>
-        /* TEMEL SAYFA AYARLARI */
-        body { 
-            background-color: #0a0a0a; /* Çok koyu gri/siyah */
-            color: #d1d1d1; 
-            font-family: "Courier New", monospace; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            overflow: hidden; 
-            position: relative; 
-        }
-
-        /* ÇİZGİ EFEKTİ (SCANLINES) - Artık daha şeffaf */
-        body::before { 
-            content: " "; 
-            display: block; 
-            position: absolute; 
-            top: 0; left: 0; bottom: 0; right: 0; 
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02)); 
-            z-index: 10; /* Çizgiler pencerelerin altında kalsın istersen bunu düşürürüz */
-            background-size: 100% 3px, 3px 100%; 
-            pointer-events: none; 
-        }
+        /* GENEL SAYFA DÜZENİ VE CRT EFEKTİ */
+        body { background-color: #0a0a0a; color: #d1d1d1; font-family: "Courier New", monospace; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden; position: relative; }
+        body::before { content: " "; display: block; position: absolute; top: 0; left: 0; bottom: 0; right: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%); z-index: 2; background-size: 100% 4px; pointer-events: none; }
         
         /* PENCERE STİLİ */
-        .window { 
-            width: 420px; 
-            background-color: #c0c0c0; 
-            border: 2px solid #ffffff; 
-            border-right-color: #808080; 
-            border-bottom-color: #808080; 
-            padding: 2px; 
-            box-shadow: 5px 5px 0px #000; 
-            z-index: 100; /* Pencere her zaman en üstte */
-            position: relative;
-        }
-
-        .title-bar { 
-            background-color: #000080; 
-            color: white; 
-            padding: 3px 5px; 
-            font-weight: bold; 
-            font-size: 11px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-        }
-
+        .window { width: 420px; background-color: #c0c0c0; border: 2px solid #ffffff; border-right-color: #808080; border-bottom-color: #808080; padding: 2px; box-shadow: 5px 5px 0px #000; z-index: 3; }
+        .title-bar { background-color: #000080; color: white; padding: 3px 5px; font-weight: bold; font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
         .content { padding: 20px; color: #000; text-align: center; }
         
-        /* GİRİŞ ELEMANLARI */
-        input { 
-            width: 90%; 
-            margin: 8px 0; 
-            border: 2px inset #fff; 
-            padding: 5px; 
-            background: #fff; 
-            font-family: "Courier New", monospace; 
-            outline: none; 
-        }
-
-        button { 
-            padding: 5px 20px; 
-            background: #c0c0c0; 
-            border: 2px outset #fff; 
-            cursor: pointer; 
-            font-family: "Courier New", monospace; 
-            font-weight: bold; 
-        }
-
+        /* GİRİŞ FORMU ELEMANLARI */
+        input { width: 90%; margin: 8px 0; border: 2px inset #fff; padding: 5px; background: #fff; font-family: "Courier New", monospace; outline: none; }
+        button { padding: 5px 20px; background: #c0c0c0; border: 2px outset #fff; cursor: pointer; font-family: "Courier New", monospace; font-weight: bold; color: #000; margin-top: 10px; }
         button:active { border: 2px inset #fff; }
 
-        /* SİSTEM DETAYLARI */
-        .system-meta { 
-            font-size: 9px; 
-            color: #555; 
-            text-align: left; 
-            margin-bottom: 10px; 
-            border-bottom: 1px solid #999; 
-            padding-bottom: 5px; 
-        }
+        /* SİSTEM BİLGİLERİ (Yeni eklenen doluluk öğeleri) */
+        .system-meta { font-size: 9px; color: #555; text-align: left; margin-bottom: 10px; line-height: 1.2; border-bottom: 1px solid #888; padding-bottom: 5px; }
+        .status-dot { height: 8px; width: 8px; background-color: #00ff00; border-radius: 50%; display: inline-block; margin-right: 5px; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0.3; } }
 
-        .status-dot { 
-            height: 7px; width: 7px; 
-            background-color: #00ff00; 
-            border-radius: 50%; 
-            display: inline-block; 
-            margin-right: 5px; 
-            animation: blink 1.2s infinite; 
-        }
+        /* GİZLİ KUTU */
+        #secret-content { display: none; z-index: 4; }
+        #secret-content a { display: inline-block; margin-top: 15px; color: #000080; text-decoration: none; font-weight: bold; border: 1px dotted #000080; padding: 5px; }
+        #secret-content a:hover { background-color: #000080; color: #fff; }
 
-        @keyframes blink { 50% { opacity: 0.2; } }
-
-        /* GİZLİ İPUCU VE COPYRIGHT (SADECE ÇOK DİKKATLİ BAKILINCA GÖRÜNÜR) */
-        #hint-text, #copyright-text { 
-            position: absolute; 
-            color: #1a1a1a; /* Arka plandan çok hafif farklı, parlama yok */
-            font-size: 9px; 
-            z-index: 5; 
-            user-select: none; 
-            letter-spacing: 1px; 
-        }
-        #hint-text { bottom: 10px; left: 15px; }
-        #copyright-text { bottom: 10px; right: 15px; }
-
-        /* GİZLİ KUTU SONRADAN AÇILIR */
-        #secret-content { display: none; }
+        #hint-text { position: absolute; bottom: 10px; left: 15px; color: #1a1a1a; font-size: 9px; z-index: 3; user-select: none; letter-spacing: 1px; }
+        #copyright-text { position: absolute; bottom: 10px; right: 15px; color: #1a1a1a; font-size: 9px; z-index: 3; user-select: none; letter-spacing: 1px; }
 
     </style>
 </head>
@@ -122,41 +38,49 @@
     <div class="window" id="login-window">
         <div class="title-bar">
             <span>VETERANSCOVE-DATABASE_V1.31</span>
-            <span style="font-size: 9px;"><span class="status-dot"></span>SYS_OK</span>
+            <span style="font-size: 9px;"><span class="status-dot"></span>CONNECTED</span>
         </div>
         <div class="content">
             <div class="system-meta">
-                ID: 0x88AF-VC | AUTH_MODE: RESTRICTED<br>
-                SİSTEM DURUMU: ÇEVRİMİÇİ
+                ID: 0x88AF-VC | NODE: NORTH-DB-04<br>
+                KERNEL: V.1.31-STABLE | ENCRYPTION: AES-256
             </div>
-            <p style="font-size: 11px; text-align: left;">Erişim Anahtarı Girin:</p>
-            <input type="text" id="username" placeholder="USER" autocomplete="off">
-            <input type="password" id="password" placeholder="KEY">
-            <div style="text-align: right; margin-top: 10px;">
-                <button onclick="check()">GİRİŞ</button>
+
+            <p style="font-size: 12px; text-align: left; margin-bottom: 5px;">Kimlik Doğrulama Gerekli:</p>
+            <input type="text" id="username" placeholder="KULLANICI_ADI" autocomplete="off">
+            <input type="password" id="password" placeholder="ERISIM_ANAHTARI">
+            
+            <div style="text-align: right;">
+                <button onclick="check()">GIRIŞ</button>
             </div>
-            <p id="error" style="color: red; font-size: 10px; margin-top: 10px; height: 10px;"></p>
+            
+            <p style="font-size: 9px; color: #777; margin-top: 15px; text-align: center; font-style: italic;">
+                * Yetkisiz erişim denemeleri loglanmaktadır.
+            </p>
+            <p id="error" style="color: red; font-size: 11px; margin-top: 10px; text-align: center;"></p>
         </div>
     </div>
 
     <div class="window" id="secret-content">
-        <div class="title-bar"><span>SECURE_DATA_FOUND</span><span>[X]</span></div>
+        <div class="title-bar"><span>DATABASE_ACCESS_GRANTED</span><span>[X]</span></div>
         <div class="content">
-            <h2 style="font-size: 16px;">ERİŞİM ONAYLANDI</h2>
-            <p style="font-size: 12px;">Dizin: /archives/teras_04/</p>
-            <hr style="border:0; border-top:1px solid #888;">
-            <a id="final-link" href="#" target="_blank" style="color:#000080; font-weight:bold; text-decoration:none; border:1px dotted #000080; padding:5px; display:inline-block; margin-top:10px;">> VERİYİ ÇIKAR</a>
+            <h2 style="font-size: 18px;">ERİŞİM ONAYLANDI</h2>
+            <p style="font-size: 13px;">Kritik veri paketine ulaşıldı.</p>
+            <p style="font-size: 11px; color: #444;">Dizin: /root/archives/teras_04/audio_log.vca</p>
+            <hr style="border: 0; border-top: 1px solid #888;">
+            <a id="final-link" href="#" target="_blank">> KAYDI OYNAT</a>
         </div>
     </div>
 
-    <div id="hint-text">> kayitlar_arsiv_icerisinde</div>
+    <div id="hint-text">> Sistem kayıtları sitede /ARSIV içerisinde saklanmaktadır.</div>
+
     <div id="copyright-text">VETERANS CO. COPYRIGHT</div>
 
     <script>
-        // Şifreler (Aynı)
+        // Şifreler (Aynı bıraktım)
         const u = "WE1VU1Q0RjRfM1JTMFpR"; 
         const p = "TElUVExFSEVST0JSSU5FSU1DVU1NSU5HSU5ZT1VSTU9N"; 
-        const l = "aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1OdnRlSEJ6dFBNYw=="; 
+        const l = "BURAYA_BASE64_YOUTUBE_LINKI_GELECEK"; 
 
         function check() {
             const user = btoa(document.getElementById("username").value.toUpperCase());
@@ -168,4 +92,21 @@
                 document.getElementById("hint-text").style.display = "none";
                 document.getElementById("copyright-text").style.display = "none";
                 
-                if(l !== "BURAYA_BASE64_YOUTUBE_LINKI
+                if(l !== "aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1OdnRlSEJ6dFBNYw==") {
+                     document.getElementById("final-link").href = atob(l);
+                } else {
+                     alert("Link hatası!");
+                }
+            } else {
+                document.getElementById("error").innerHTML = "HATA: Gecersiz kimlik doğrulama.";
+            }
+        }
+
+        document.onkeydown = function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0))) {
+                return false;
+            }
+        }
+    </script>
+</body>
+</html>
