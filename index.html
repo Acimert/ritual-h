@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>veteranscove-database_V1.31</title>
     <style>
-        /* GENEL SAYFA DÜZENİ VE CRT ÇİZGİ EFEKTİ */
+        /* TEMEL SAYFA AYARLARI */
         body { 
-            background-color: #080808; 
+            background-color: #0a0a0a; /* Çok koyu gri/siyah */
             color: #d1d1d1; 
             font-family: "Courier New", monospace; 
             display: flex; 
@@ -18,15 +18,15 @@
             position: relative; 
         }
 
-        /* Çizgi Çizgi Arkaplan (Scanlines) */
+        /* ÇİZGİ EFEKTİ (SCANLINES) - Artık daha şeffaf */
         body::before { 
             content: " "; 
             display: block; 
             position: absolute; 
             top: 0; left: 0; bottom: 0; right: 0; 
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.2) 50%), 
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); 
-            z-index: 10; 
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02)); 
+            z-index: 10; /* Çizgiler pencerelerin altında kalsın istersen bunu düşürürüz */
             background-size: 100% 3px, 3px 100%; 
             pointer-events: none; 
         }
@@ -40,8 +40,10 @@
             border-bottom-color: #808080; 
             padding: 2px; 
             box-shadow: 5px 5px 0px #000; 
-            z-index: 5; 
+            z-index: 100; /* Pencere her zaman en üstte */
+            position: relative;
         }
+
         .title-bar { 
             background-color: #000080; 
             color: white; 
@@ -52,9 +54,10 @@
             justify-content: space-between; 
             align-items: center; 
         }
+
         .content { padding: 20px; color: #000; text-align: center; }
         
-        /* GİRİŞ FORMU ELEMANLARI */
+        /* GİRİŞ ELEMANLARI */
         input { 
             width: 90%; 
             margin: 8px 0; 
@@ -64,6 +67,7 @@
             font-family: "Courier New", monospace; 
             outline: none; 
         }
+
         button { 
             padding: 5px 20px; 
             background: #c0c0c0; 
@@ -72,9 +76,10 @@
             font-family: "Courier New", monospace; 
             font-weight: bold; 
         }
+
         button:active { border: 2px inset #fff; }
 
-        /* SİSTEM BİLGİLERİ (Doluluk Öğeleri) */
+        /* SİSTEM DETAYLARI */
         .system-meta { 
             font-size: 9px; 
             color: #555; 
@@ -83,6 +88,7 @@
             border-bottom: 1px solid #999; 
             padding-bottom: 5px; 
         }
+
         .status-dot { 
             height: 7px; width: 7px; 
             background-color: #00ff00; 
@@ -91,7 +97,75 @@
             margin-right: 5px; 
             animation: blink 1.2s infinite; 
         }
+
         @keyframes blink { 50% { opacity: 0.2; } }
 
-        /* GİZLİ KUTU */
-        #secret-content { display:
+        /* GİZLİ İPUCU VE COPYRIGHT (SADECE ÇOK DİKKATLİ BAKILINCA GÖRÜNÜR) */
+        #hint-text, #copyright-text { 
+            position: absolute; 
+            color: #1a1a1a; /* Arka plandan çok hafif farklı, parlama yok */
+            font-size: 9px; 
+            z-index: 5; 
+            user-select: none; 
+            letter-spacing: 1px; 
+        }
+        #hint-text { bottom: 10px; left: 15px; }
+        #copyright-text { bottom: 10px; right: 15px; }
+
+        /* GİZLİ KUTU SONRADAN AÇILIR */
+        #secret-content { display: none; }
+
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <div class="window" id="login-window">
+        <div class="title-bar">
+            <span>VETERANSCOVE-DATABASE_V1.31</span>
+            <span style="font-size: 9px;"><span class="status-dot"></span>SYS_OK</span>
+        </div>
+        <div class="content">
+            <div class="system-meta">
+                ID: 0x88AF-VC | AUTH_MODE: RESTRICTED<br>
+                SİSTEM DURUMU: ÇEVRİMİÇİ
+            </div>
+            <p style="font-size: 11px; text-align: left;">Erişim Anahtarı Girin:</p>
+            <input type="text" id="username" placeholder="USER" autocomplete="off">
+            <input type="password" id="password" placeholder="KEY">
+            <div style="text-align: right; margin-top: 10px;">
+                <button onclick="check()">GİRİŞ</button>
+            </div>
+            <p id="error" style="color: red; font-size: 10px; margin-top: 10px; height: 10px;"></p>
+        </div>
+    </div>
+
+    <div class="window" id="secret-content">
+        <div class="title-bar"><span>SECURE_DATA_FOUND</span><span>[X]</span></div>
+        <div class="content">
+            <h2 style="font-size: 16px;">ERİŞİM ONAYLANDI</h2>
+            <p style="font-size: 12px;">Dizin: /archives/teras_04/</p>
+            <hr style="border:0; border-top:1px solid #888;">
+            <a id="final-link" href="#" target="_blank" style="color:#000080; font-weight:bold; text-decoration:none; border:1px dotted #000080; padding:5px; display:inline-block; margin-top:10px;">> VERİYİ ÇIKAR</a>
+        </div>
+    </div>
+
+    <div id="hint-text">> kayitlar_arsiv_icerisinde</div>
+    <div id="copyright-text">VETERANS CO. COPYRIGHT</div>
+
+    <script>
+        // Şifreler (Aynı)
+        const u = "WE1VU1Q0RjRfM1JTMFpR"; 
+        const p = "TElUVExFSEVST0JSSU5FSU1DVU1NSU5HSU5ZT1VSTU9N"; 
+        const l = "aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1OdnRlSEJ6dFBNYw=="; 
+
+        function check() {
+            const user = btoa(document.getElementById("username").value.toUpperCase());
+            const pass = btoa(document.getElementById("password").value.toUpperCase());
+            
+            if (user === u && pass === p) {
+                document.getElementById("login-window").style.display = "none";
+                document.getElementById("secret-content").style.display = "block";
+                document.getElementById("hint-text").style.display = "none";
+                document.getElementById("copyright-text").style.display = "none";
+                
+                if(l !== "BURAYA_BASE64_YOUTUBE_LINKI
